@@ -9,7 +9,7 @@ public class RandomAgent implements Agent
 
 	private String role;
 	private int playclock;
-	private boolean myTurn;
+	private boolean myTurn = true;
 	
 	/*
 		init(String role, int playclock) is called once before you have to select the first action. Use it to initialize the agent. role is either "WHITE" or "RED" and playclock is the number of seconds after which nextAction must return.
@@ -26,7 +26,7 @@ public class RandomAgent implements Agent
     public String nextAction(int lastDrop) { 
 		// TODO: 1. update your internal world model according to the action that was just executed
 		
-		myTurn = !myTurn;
+		//myTurn = !myTurn;
 		// TODO: 2. run alpha-beta search to determine the best move
 
 		if (myTurn) {
