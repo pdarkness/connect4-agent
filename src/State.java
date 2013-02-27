@@ -1,3 +1,5 @@
+import sun.plugin2.util.SystemUtil;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
@@ -30,8 +32,7 @@ public class State {
               newGrid.add( current.get(j), i );
        }
 
-       boolean nextTurn = !turn;
-        State newState = new State(nextTurn,newGrid);
+        State newState = new State(turn,newGrid);
         newState.putDisc(column);
        return newState;
     }
@@ -44,12 +45,14 @@ public class State {
         for(int i=0;i<legalColumns().size();i++)
             System.out.print(legalColumns().get(i) + " ");
         System.out.println();
-        System.out.println("Player: " + gameFinished() );
+        System.out.println("Winner: " + gameFinished() );
         System.out.println("Current col: " + currentColumn);
         grid.debug();
     }
     public List<Integer> legalColumns()
     {
+        if(gameFinished() != -1 )
+            return new ArrayList<Integer>();
         List<Integer> legal = new ArrayList<Integer>();
         for(int i=0;i<grid.getWidth();i++)
             if(grid.getStack(i).size() < grid.getHeight())
@@ -60,50 +63,71 @@ public class State {
     int gameFinished()
     {
             if(currentColumn == -1)
-                return -1;
-            if(legalColumns().size() == 0)
-            return 0;
+                    return -1;
+            int legal = 0;
+            for(int i=0;i<grid.getWidth();i++)
+                if(grid.getStack(i).size() < grid.getHeight())
+                    legal++;
+            if(legal == 0)
+                return 0;
 
             else
             {
                 int adjR = grid.adjecentToRight(currentColumn,grid.getStack(currentColumn).size()-1);
                 int adjL = grid.adjecentToLeft(currentColumn,grid.getStack(currentColumn).size()-1);
 
-                System.out.println("adjL: " + adjL );
-                System.out.println("AdjR: " + adjR);
                 if((adjR+adjL) >=3)
                 {
                     if(turn)
-                        return 1;
-                    else
                         return 2;
+                    else
+                        return 1;
 
                 }
                 int adjUR = grid.adjecentToUpRight(currentColumn,grid.getStack(currentColumn).size()-1);
-                int adjDR = grid.adjecentToDownRight(currentColumn,grid.getStack(currentColumn).size()-1);
-                System.out.println("adj Up   Right: " + adjUR);
-                System.out.println("Adj Down Right: " + adjDR);
-
-                int adjUL = grid.adjecentToUpLeft(currentColumn,grid.getStack(currentColumn).size()-1);
                 int adjDL = grid.adjecentToDownLeft(currentColumn,grid.getStack(currentColumn).size()-1);
-                System.out.println("adj Up   Left: " + adjUL);
-                System.out.println("Adj Down Left: " + adjDL);
-                int adjDown = grid.adjecentBelow(currentColumn,grid.getStack(currentColumn).size()-1);
-                System.out.println("Adj down : " + adjDown);
 
+                if((adjUR+adjDL) >=3)
+                {
+                    if(turn)
+                        return 2;
+                    else
+                        return 1;
+
+                }
+                int adjDR = grid.adjecentToDownRight(currentColumn,grid.getStack(currentColumn).size()-1);
+                int adjUL = grid.adjecentToUpLeft(currentColumn,grid.getStack(currentColumn).size()-1);
+
+                if((adjDR+adjUL) >=3)
+                {
+                    if(turn)
+                        return 2;
+                    else
+                        return 1;
+                }
+                int adjDown = grid.adjecentBelow(currentColumn,grid.getStack(currentColumn).size()-1);
+
+                if(adjDown >=3)
+                {
+                    if(turn)
+                        return 2;
+                    else
+                        return 1;
+                }
             }
         return -1;
     }
 
     public void putDisc(int column)
     {
-        Disc temp;
+        Disc disc;
         if(turn)
-            temp = Disc.WHITE;
+            disc = Disc.WHITE;
         else
-            temp = Disc.RED;
+            disc = Disc.RED;
 
         currentColumn = column;
-        grid.add(temp, column);
+        grid.add(disc, column);
+        turn = !turn;
     }
 }

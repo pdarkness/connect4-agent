@@ -2,6 +2,7 @@ import com.sun.org.apache.bcel.internal.generic.ACONST_NULL;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.Stack;
 
 enum Disc {
@@ -33,7 +34,10 @@ public class Grid {
            throw new IndexOutOfBoundsException();
         Stack<Disc> current = columns.get(column);
         if(current.size() >= height)
+        {
+           System.out.println(column);
            throw new IndexOutOfBoundsException();
+        }
         current.push(disc);
     }
 
@@ -72,7 +76,14 @@ public class Grid {
     public static void main(String[] args)
     {
         State state = new State(true,new Grid(7,6));
-        state.successor(3).successor(4).successor(4).successor(5).successor(6).successor(5).successor(5).successor(5).successor(6).successor(4).successor(4).successor(6).successor(6).successor(4).successor(1).successor(3).successor(2).successor(4).successor(3).successor(3).successor(3).successor(3).successor(5).successor(1).successor(1).successor(1).successor(2).successor(2).successor(2).successor(2).successor(2).successor(0).successor(0).successor(0).successor(0).successor(0).successor(0).successor(1).successor(1).successor(6).successor(6).successor(5).debug();
+        while(state.legalColumns().size() != 0)
+        {
+            Random rand = new Random();
+            int col = rand.nextInt(state.legalColumns().size());
+            state.putDisc(state.legalColumns().get(col));
+        }
+        state.debug();
+
     }
 
     public int adjecentToLeft(int x, int y)
