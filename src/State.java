@@ -5,11 +5,13 @@ import java.util.Stack;
 public class State {
     Grid grid;
     boolean turn;  //True=WHITE,False=RED
+    int currentColumn;
 
     State(boolean turn,Grid grid)
     {
       this.turn = turn;
       this.grid = grid;
+      currentColumn = -1;
     }
 
     public State successor(int column)
@@ -27,9 +29,10 @@ public class State {
            for(int j=0;j<current.size();j++)
               newGrid.add( current.get(j), i );
        }
-       newGrid.add(newDisc,column);
+
        boolean nextTurn = !turn;
         State newState = new State(nextTurn,newGrid);
+        newState.putDisc(column);
        return newState;
     }
 
@@ -41,6 +44,8 @@ public class State {
         for(int i=0;i<legalColumns().size();i++)
             System.out.print(legalColumns().get(i) + " ");
         System.out.println();
+        System.out.println("Player: " + gameFinished() );
+        System.out.println("Current col: " + currentColumn);
         grid.debug();
     }
     public List<Integer> legalColumns()
@@ -52,10 +57,40 @@ public class State {
         return legal;
     }
 
-    int GameFinished(int column)
+    int gameFinished()
     {
-        if(legalColumns().size() == 0)
+            if(currentColumn == -1)
+                return -1;
+            if(legalColumns().size() == 0)
             return 0;
-        else return 0;
+
+            else
+            {
+                int adjR = grid.adjecentToRight(currentColumn,grid.getStack(currentColumn).size()-1);
+                int adjL = grid.adjecentToLeft(currentColumn,grid.getStack(currentColumn).size()-1);
+                System.out.println("adjL: " + adjL );
+                System.out.println("AdjR: " + adjR);
+                if((adjR+adjL) >=3)
+                {
+                    if(turn)
+                        return 1;
+                    else
+                        return 2;
+
+                }
+            }
+        return -1;
+    }
+
+    public void putDisc(int column)
+    {
+        Disc temp;
+        if(turn)
+            temp = Disc.WHITE;
+        else
+            temp = Disc.RED;
+
+        currentColumn = column;
+        grid.add(temp, column);
     }
 }

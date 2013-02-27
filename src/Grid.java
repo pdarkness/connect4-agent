@@ -72,6 +72,28 @@ public class Grid {
     public static void main(String[] args)
     {
         State state = new State(true,new Grid(7,6));
-        state.successor(2).successor(2).successor(2).successor(2).successor(2).successor(2).debug();
+        state.successor(2).successor(2).successor(2).successor(2).successor(2).successor(2).successor(3).successor(3).successor(4).successor(4).successor(5).debug();
+    }
+
+    public int adjecentToLeft(int x, int y)
+    {
+        if(getDisc(x,y) ==null)
+            return 0;
+        if(x <= 0)
+            return 0;
+        if(getDisc(x-1,y) == getDisc(x,y))
+            return 1+adjecentToLeft(x-1,y);
+        return 0;
+    }
+
+    public int adjecentToRight(int x, int y)
+    {
+        if(getDisc(x,y)==null)
+            return 0;
+        if(x  >= getWidth())
+            return 0;
+        if(getDisc(x+1,y) == getDisc(x,y))
+            return 1+adjecentToRight(x+1,y);
+        return 0;
     }
 }
