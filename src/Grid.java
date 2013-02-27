@@ -162,5 +162,37 @@ public class Grid {
             return 1+adjecentBelow(x,y-1);
         return 0;
     }
+    public int adjacent( int x , int y ) {
+        int sum = 0;
+        if(x-1 >= 0)
+        {
+           if( getDisc(x-1,y) == getDisc(x,y))
+                sum++;
+            if(y-1 >= 0)
+                if( getDisc(x-1,y-1) == getDisc(x,y))
+                     sum++;
+            if(y+1 < getHeight() )
+                if(getDisc(x-1,y+1) == getDisc(x,y))
+                    sum++;
+        }
+        if(x+1 < getWidth())
+        {
+            if( getDisc(x+1,y) == getDisc(x,y))
+                sum++;
+            if(y+1 < getHeight())
+                if( getDisc(x+1,y+1) == getDisc(x,y))
+                    sum++;
+            if(y-1 >=0)
+                if( getDisc(x+1,y-1) == getDisc(x,y))
+                    sum++;
+        }
+        if(y+1 < getHeight())
+            if(getDisc(x,y+1) == getDisc(x,y))
+                sum++;
+        if(y-1>=0)
+            if(getDisc(x,y-1) == getDisc(x,y))
+                sum++;
+        return sum;
+    }
 
 }
