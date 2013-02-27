@@ -68,6 +68,7 @@ public class State {
             {
                 int adjR = grid.adjecentToRight(currentColumn,grid.getStack(currentColumn).size()-1);
                 int adjL = grid.adjecentToLeft(currentColumn,grid.getStack(currentColumn).size()-1);
+
                 System.out.println("adjL: " + adjL );
                 System.out.println("AdjR: " + adjR);
                 if((adjR+adjL) >=3)
@@ -78,6 +79,18 @@ public class State {
                         return 2;
 
                 }
+                int adjUR = grid.adjecentToUpRight(currentColumn,grid.getStack(currentColumn).size()-1);
+                int adjDR = grid.adjecentToDownRight(currentColumn,grid.getStack(currentColumn).size()-1);
+                System.out.println("adj Up   Right: " + adjUR);
+                System.out.println("Adj Down Right: " + adjDR);
+
+                int adjUL = grid.adjecentToUpLeft(currentColumn,grid.getStack(currentColumn).size()-1);
+                int adjDL = grid.adjecentToDownLeft(currentColumn,grid.getStack(currentColumn).size()-1);
+                System.out.println("adj Up   Left: " + adjUL);
+                System.out.println("Adj Down Left: " + adjDL);
+                int adjDown = grid.adjecentBelow(currentColumn,grid.getStack(currentColumn).size()-1);
+                System.out.println("Adj down : " + adjDown);
+
             }
         return -1;
     }

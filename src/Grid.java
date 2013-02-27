@@ -72,7 +72,7 @@ public class Grid {
     public static void main(String[] args)
     {
         State state = new State(true,new Grid(7,6));
-        state.successor(2).successor(2).successor(2).successor(2).successor(2).successor(2).successor(3).successor(3).successor(4).successor(4).successor(5).debug();
+        state.successor(3).successor(4).successor(4).successor(5).successor(6).successor(5).successor(5).successor(5).successor(6).successor(4).successor(4).successor(6).successor(6).successor(4).successor(1).successor(3).successor(2).successor(4).successor(3).successor(3).successor(3).successor(3).successor(5).successor(1).successor(1).successor(1).successor(2).successor(2).successor(2).successor(2).successor(2).successor(0).successor(0).successor(0).successor(0).successor(0).successor(0).successor(1).successor(1).successor(6).successor(6).successor(5).debug();
     }
 
     public int adjecentToLeft(int x, int y)
@@ -90,10 +90,66 @@ public class Grid {
     {
         if(getDisc(x,y)==null)
             return 0;
-        if(x  >= getWidth())
+        if(x  >= getWidth()-1)
             return 0;
         if(getDisc(x+1,y) == getDisc(x,y))
             return 1+adjecentToRight(x+1,y);
         return 0;
     }
+
+    public int adjecentToUpRight(int x, int y)
+    {
+        if(getDisc(x,y)==null)
+            return 0;
+        if(x  >= getWidth()-1 || y >= getHeight())
+            return 0;
+        if(getDisc(x+1,y+1) == getDisc(x,y))
+            return 1+adjecentToUpRight(x+1,y+1);
+        return 0;
+    }
+
+    public int adjecentToDownRight(int x, int y)
+    {
+        if(getDisc(x,y)==null)
+            return 0;
+        if(x  >= getWidth()-1 || y <= 0)
+            return 0;
+        if(getDisc(x+1,y-1) == getDisc(x,y))
+            return 1+adjecentToDownRight(x+1,y-1);
+        return 0;
+    }
+
+    public int adjecentToDownLeft(int x, int y)
+    {
+        if(getDisc(x,y)==null)
+            return 0;
+        if(x  <= 0 || y <=0)
+            return 0;
+        if(getDisc(x-1,y-1) == getDisc(x,y))
+            return 1+adjecentToDownLeft(x-1,y-1);
+        return 0;
+    }
+
+    public int adjecentToUpLeft(int x, int y)
+    {
+        if(getDisc(x,y)==null)
+            return 0;
+        if(x  <= 0 || y >= getHeight())
+            return 0;
+        if(getDisc(x-1,y+1) == getDisc(x,y))
+            return 1+adjecentToUpLeft(x-1,y+1);
+        return 0;
+    }
+
+    public int adjecentBelow(int x, int y)
+    {
+        if(getDisc(x,y)==null)
+            return 0;
+        if(y  <= 0)
+            return 0;
+        if(getDisc(x,y-1) == getDisc(x,y))
+            return 1+adjecentBelow(x,y-1);
+        return 0;
+    }
+
 }
