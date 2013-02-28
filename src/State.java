@@ -130,4 +130,21 @@ public class State {
         grid.add(disc, column);
         turn = !turn;
     }
+    public int heuristic_value()
+    {
+        int sumWhite  = 0;
+        int sumRed  = 0;
+        for(int i=0;i<grid.getWidth();i++)
+        {
+            Stack<Disc> current = grid.getStack(i);
+            for(int j=0;j<current.size();j++)
+            {
+                if(grid.getDisc(i,j) == Disc.WHITE)
+                    sumWhite+= grid.adjacent(i,j);
+                else if(grid.getDisc(i,j) == Disc.RED)
+                    sumRed += grid.adjacent(i,j);
+            }
+        }
+        return sumWhite-sumRed;
+    }
 }
