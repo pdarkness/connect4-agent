@@ -14,8 +14,9 @@ public class JamesBondAgent implements Agent {
     private boolean myTurn;
     private Random random;
     private State state;
-
+    int counter = 0;
     int alphabeta(State node, int depth, int alpha, int beta, boolean maxplayer)  {
+        counter++;
         if( depth == 0 || node.gameFinished() == 1 )
             return node.heuristic_value();
         List<State> children = new ArrayList<State>();
@@ -61,22 +62,24 @@ public class JamesBondAgent implements Agent {
         state.putDisc(lastDrop);
         myTurn = !myTurn;
         // TODO: 2. run alpha-beta search to determine the best move
-        List<State> children = new ArrayList<State>();
-        int bestScore = Integer.MIN_VALUE;
-        int bestColumn = -1;
-        for(Integer n : state.legalColumns())
-        {
-            int score = alphabeta(state.successor(n), 1, Integer.MIN_VALUE, Integer.MAX_VALUE, myTurn);
-            if(score > bestScore)
-            {
-                bestScore = score;
-                bestColumn = n;
-            }
-        }
+
 
         if (myTurn) {
+            List<State> children = new ArrayList<State>();
+            int bestScore = Integer.MIN_VALUE;
+            int bestColumn = -1;
+            for(Integer n : state.legalColumns())
+            {
+                int score = alphabeta(state.successor(n), 7, Integer.MIN_VALUE, Integer.MAX_VALUE, myTurn);
+                if(score > bestScore)
+                {
+                    bestScore = score;
+                    bestColumn = n;
+                }
+            }
             return "(DROP " + bestColumn + ")";
         } else {
+            System.out.println("EXPANSIONS:" + counter);
             return "NOOP";
         }
     }

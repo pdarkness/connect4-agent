@@ -56,7 +56,7 @@ public class State {
         List<Integer> legal = new ArrayList<Integer>();
         for(int i=0;i<grid.getWidth();i++)
             if(grid.getStack(i).size() < grid.getHeight())
-                legal.add(i);
+                legal.add(i+1);
         return legal;
     }
 
@@ -73,8 +73,8 @@ public class State {
 
             else
             {
-                int adjR = grid.adjecentToRight(currentColumn,grid.getStack(currentColumn).size()-1);
-                int adjL = grid.adjecentToLeft(currentColumn,grid.getStack(currentColumn).size()-1);
+                int adjR = grid.adjecentToRight(currentColumn-1,grid.getStack(currentColumn-1).size()-1);
+                int adjL = grid.adjecentToLeft(currentColumn-1,grid.getStack(currentColumn-1).size()-1);
 
                 if((adjR+adjL) >=3)
                 {
@@ -84,8 +84,8 @@ public class State {
                         return 1;
 
                 }
-                int adjUR = grid.adjecentToUpRight(currentColumn,grid.getStack(currentColumn).size()-1);
-                int adjDL = grid.adjecentToDownLeft(currentColumn,grid.getStack(currentColumn).size()-1);
+                int adjUR = grid.adjecentToUpRight(currentColumn-1,grid.getStack(currentColumn-1).size()-1);
+                int adjDL = grid.adjecentToDownLeft(currentColumn-1,grid.getStack(currentColumn-1).size()-1);
 
                 if((adjUR+adjDL) >=3)
                 {
@@ -95,8 +95,8 @@ public class State {
                         return 1;
 
                 }
-                int adjDR = grid.adjecentToDownRight(currentColumn,grid.getStack(currentColumn).size()-1);
-                int adjUL = grid.adjecentToUpLeft(currentColumn,grid.getStack(currentColumn).size()-1);
+                int adjDR = grid.adjecentToDownRight(currentColumn-1,grid.getStack(currentColumn-1).size()-1);
+                int adjUL = grid.adjecentToUpLeft(currentColumn-1,grid.getStack(currentColumn-1).size()-1);
 
                 if((adjDR+adjUL) >=3)
                 {
@@ -105,7 +105,7 @@ public class State {
                     else
                         return 1;
                 }
-                int adjDown = grid.adjecentBelow(currentColumn,grid.getStack(currentColumn).size()-1);
+                int adjDown = grid.adjecentBelow(currentColumn-1,grid.getStack(currentColumn-1).size()-1);
 
                 if(adjDown >=3)
                 {
@@ -127,7 +127,7 @@ public class State {
             disc = Disc.RED;
 
         currentColumn = column;
-        grid.add(disc, column);
+        grid.add(disc, column-1);
         turn = !turn;
     }
     public int heuristic_value()
@@ -140,9 +140,11 @@ public class State {
             for(int j=0;j<current.size();j++)
             {
                 if(grid.getDisc(i,j) == Disc.WHITE)
-                    sumWhite+= grid.adjacent(i,j);
+                {
+                    sumWhite = grid.adjacent(i,j);
+                }
                 else if(grid.getDisc(i,j) == Disc.RED)
-                    sumRed += grid.adjacent(i,j);
+                sumRed  = grid.adjacent(i,j);
             }
         }
         return sumWhite-sumRed;
