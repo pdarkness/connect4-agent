@@ -149,4 +149,17 @@ public class State {
         }
         return sumWhite-sumRed;
     }
+
+    @Override
+    public boolean equals(Object o)
+    {
+        State compareState = (State) o;
+        if(currentColumn != compareState.currentColumn )
+           return false;
+        if(turn != compareState.turn)
+            return false;
+        if(!grid.equals(compareState.grid))
+            return false;
+        return true;
+    }
 }

@@ -245,4 +245,20 @@ public class Grid {
         return sum;
     }
 
+    @Override
+    public boolean equals(Object o)
+    {
+       Grid compareGrid = (Grid) o;
+       for(int i=0;i<this.columns.size();i++)
+       {
+           Stack<Disc> current = this.columns.get(i);
+           for(int j=0;j<current.size();j++)
+           {
+               if(this.getDisc(i,j) != compareGrid.getDisc(i,j))
+                   return false;
+           }
+       }
+        return true;
+    }
+
 }
