@@ -14,6 +14,7 @@ public class JamesBondAgent implements Agent {
     private HashMap<State,Entry> checkedStates;
     private long endTime;
     private int counter = 0;
+    private Disc me;
 
     private class Entry {
         public int value;
@@ -44,7 +45,7 @@ public class JamesBondAgent implements Agent {
         counter++;
         if( depth == 0 || node.gameFinished() != -1 )
         {
-            int s = node.heuristic_value();
+            int s = node.heuristic_value(me);
             checkedStates.put(node,new Entry(s,depth,EXACT));
             return s;
         }
@@ -84,6 +85,9 @@ public class JamesBondAgent implements Agent {
         this.role = role;
         this.playclock = playclock;
         myTurn = !role.equals("WHITE");
+        if(!myTurn)
+               me = Disc.WHITE;
+        else   me = Disc.RED;
         this.state = new State(true,new Grid(7,6));
         // TODO: add your own initialization code here
     }
@@ -98,7 +102,7 @@ public class JamesBondAgent implements Agent {
         //2. run alpha-beta search to determine the best move
         if (myTurn) {
             counter = 0;
-            endTime = System.currentTimeMillis()+playclock*1000 - 2000;
+            endTime = System.currentTimeMillis()+playclock*1000 - 200;
             List<State> children = new ArrayList<State>();
             int bestColumn = -1;
             int depth = 0;
@@ -117,10 +121,12 @@ public class JamesBondAgent implements Agent {
                                 currentBestColumn = n;
                             }
                     }
+                    depth = i;
                     bestColumn = currentBestColumn;
                 }
                 catch(TimeLimitExceededException e)
                 {
+                    System.out.println("DEPTH REACHED:" + depth);
                     return "(DROP " + bestColumn + ")";
                 }
             }

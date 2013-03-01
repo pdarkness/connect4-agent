@@ -130,55 +130,72 @@ public class State {
         grid.add(disc, column-1);
         turn = !turn;
     }
-    public int heuristic_value()
+    public int heuristic_value(Disc preferred_winner)
     {
-        if(gameFinished() == 2)
-            return Integer.MIN_VALUE;
-        if(gameFinished() == 1)
-            return Integer.MAX_VALUE;
+        Disc preferred_loser;
+        if(preferred_winner == Disc.WHITE)
+            preferred_loser = Disc.RED;
+        else
+            preferred_loser = Disc.WHITE;
+
+        if(preferred_winner == Disc.WHITE) {
+            if(gameFinished() == 2)
+                return Integer.MIN_VALUE;
+            if(gameFinished() == 1)
+                return Integer.MAX_VALUE;
+        }
+        else if(preferred_winner == Disc.RED) {
+            if(gameFinished() == 1)
+                return Integer.MIN_VALUE;
+            if(gameFinished() == 2)
+                return Integer.MAX_VALUE;
+        }
         int goodPoints  = 0;
         int badPoints  = 0;
         int longestRed = 0;
         int longestWhite = 0;
-        for(int i=0;i<grid.getWidth();i++)
+        for(int i=0; i<grid.getWidth();i++)
         {
             Stack<Disc> current = grid.getStack(i);
             for(int j=0;j<current.size();j++)
             {
-                if(grid.getDisc(i,j) == Disc.WHITE)
+                if(grid.getDisc(i,j) == preferred_winner)
                 {
                     int vertical = grid.adjecentBelow(i,j);
+                    if(grid.getStack(i).size()>=7)
+                        vertical = 0;
                     int horizontal = grid.adjecentToRight(i,j)+ grid.adjecentToLeft(i,j);
                     int growing = grid.adjecentToUpRight(i,j) + grid.adjecentToDownLeft(i,j);
                     int reducing = grid.adjecentToDownRight(i,j) + grid.adjecentToUpLeft(i,j);
                     int biggest = Math.max(Math.max(vertical,horizontal),Math.max(growing,reducing));
                     goodPoints += biggest;
-                    if(grid.getDisc(i+1,j) == Disc.RED && grid.getDisc(i-1,j) == Disc.RED)
+                    if(grid.getDisc(i+1,j) == preferred_loser && grid.getDisc(i-1,j) == preferred_loser)
                         goodPoints +=50;
-                    if(grid.getDisc(i-1,j+1) == Disc.RED && grid.getDisc(i+1,j-1) == Disc.RED)
+                    if(grid.getDisc(i-1,j+1) == preferred_loser && grid.getDisc(i+1,j-1) == preferred_loser)
                         goodPoints +=50;
-                    if(grid.getDisc(i-1,j-1) == Disc.RED && grid.getDisc(i+1,j+1) == Disc.RED)
+                    if(grid.getDisc(i-1,j-1) == preferred_loser && grid.getDisc(i+1,j+1) == preferred_loser)
                         goodPoints +=50;
                 }
-                else if(grid.getDisc(i,j) == Disc.RED)
+                else if(grid.getDisc(i,j) == preferred_loser)
                 {
                     int vertical = grid.adjecentBelow(i,j);
-                    if(vertical>=2 && grid.getDisc(i,j+1) == Disc.WHITE)
+                    if(vertical>=2 && grid.getDisc(i,j+1) == preferred_winner)
                         goodPoints +=500;
-
+                    if(grid.getStack(i).size()>=7)
+                        vertical = 0;
                     int to_right = grid.adjecentToRight(i,j) ;
                     int to_left = grid.adjecentToLeft(i,j);
                     int horizontal = to_right + to_left;
-                    if( i!= 6 && to_left == 2 && grid.getDisc(i+1,j) == Disc.WHITE)
+                    if( i!= 6 && to_left == 2 && grid.getDisc(i+1,j) == preferred_winner)
                         goodPoints +=500;
-                    if( i != 0 && to_right == 2 && grid.getDisc(i-1,j) == Disc.WHITE)
+                    if( i != 0 && to_right == 2 && grid.getDisc(i-1,j) == preferred_winner)
                         goodPoints +=500;
 
                     int to_upper_right = grid.adjecentToUpRight(i,j);
                     int to_lower_left =  grid.adjecentToDownLeft(i,j);
-                    if(to_upper_right == 2 && j<4 && i<4 && grid.getStack(i+3).size() >=j+3 && grid.getDisc(i+3,j+3) == Disc.WHITE)
+                    if(to_upper_right == 2 && j<4 && i<4 && grid.getStack(i+3).size() >=j+3 && grid.getDisc(i+3,j+3) == preferred_winner)
                         goodPoints +=500;
-                    if(to_lower_left == 2 && j<5 && i<6 && grid.getStack(i+1).size()>=j+1 && grid.getDisc(i+1,j+1) == Disc.WHITE )
+                    if(to_lower_left == 2 && j<5 && i<6 && grid.getStack(i+1).size()>=j+1 && grid.getDisc(i+1,j+1) == preferred_winner )
                         goodPoints +=500;
 
                     int growing = to_lower_left + to_upper_right;
@@ -186,9 +203,9 @@ public class State {
                     int to_lower_right =  grid.adjecentToDownRight(i,j);
                     int to_upper_left = grid.adjecentToUpLeft(i,j);
 
-                    if(to_lower_right == 2 && i>0 && j<5 && grid.getStack(i-1).size()>=j+1 && grid.getDisc(i-1,j+1) == Disc.WHITE)
+                    if(to_lower_right == 2 && i>0 && j<5 && grid.getStack(i-1).size()>=j+1 && grid.getDisc(i-1,j+1) == preferred_winner)
                         goodPoints += 500;
-                    if(to_upper_left == 2 && i<6 && j>0 && grid.getStack(i+1).size()>=j-1 && grid.getDisc(i+1,j-1) == Disc.WHITE)
+                    if(to_upper_left == 2 && i<6 && j>0 && grid.getStack(i+1).size()>=j-1 && grid.getDisc(i+1,j-1) == preferred_winner)
                         goodPoints += 500;
                     int reducing =  to_lower_left + to_upper_left;
                     int biggest = Math.max(Math.max(vertical,horizontal),Math.max(growing,reducing));
