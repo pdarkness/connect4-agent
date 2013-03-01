@@ -35,8 +35,8 @@ public class JamesBondAgent implements Agent {
         if(lookup != null)
             if(     lookup.depth >= depth &&
                     lookup.type == EXACT ||
-                    (lookup.type == ALPHA && lookup.value == alpha) ||
-                    (lookup.type == BETA && lookup.value == beta)
+                   (lookup.type == ALPHA && lookup.value == alpha) ||
+                   (lookup.type == BETA && lookup.value == beta)
               )
             {
                 return lookup.value;
@@ -48,8 +48,6 @@ public class JamesBondAgent implements Agent {
             checkedStates.put(node,new Entry(s,depth,EXACT));
             return s;
         }
-        if(System.currentTimeMillis() > endTime)
-            throw new TimeLimitExceededException("Time limit exceeded");
         List<State> children = new ArrayList<State>();
         for(Integer n : node.legalColumns())
             children.add( node.successor(n));
@@ -61,8 +59,6 @@ public class JamesBondAgent implements Agent {
                 if(beta <= alpha)
                     break; /* Beta cut-off */
             }
-            if(System.currentTimeMillis() > endTime)
-                throw new TimeLimitExceededException("Time limit exceeded");
             checkedStates.put(node,new Entry(alpha,depth,ALPHA));
             return alpha;
         }
@@ -102,7 +98,7 @@ public class JamesBondAgent implements Agent {
         //2. run alpha-beta search to determine the best move
         if (myTurn) {
             counter = 0;
-            endTime = System.currentTimeMillis()+playclock*1000 - 1000;
+            endTime = System.currentTimeMillis()+playclock*1000 - 2000;
             List<State> children = new ArrayList<State>();
             int bestColumn = -1;
             int depth = 0;
@@ -125,10 +121,9 @@ public class JamesBondAgent implements Agent {
                 }
                 catch(TimeLimitExceededException e)
                 {
-                    break;
+                    return "(DROP " + bestColumn + ")";
                 }
             }
-            return "(DROP " + bestColumn + ")";
         } else {
             System.out.println("EXPANSIONS:" + counter);
             return "NOOP";

@@ -164,22 +164,22 @@ public class State {
                 {
                     int vertical = grid.adjecentBelow(i,j);
                     if(vertical>=2 && grid.getDisc(i,j+1) == Disc.WHITE)
-                        goodPoints +=100;
+                        goodPoints +=500;
 
                     int to_right = grid.adjecentToRight(i,j) ;
                     int to_left = grid.adjecentToLeft(i,j);
                     int horizontal = to_right + to_left;
                     if( i!= 6 && to_left == 2 && grid.getDisc(i+1,j) == Disc.WHITE)
-                        goodPoints +=100;
+                        goodPoints +=500;
                     if( i != 0 && to_right == 2 && grid.getDisc(i-1,j) == Disc.WHITE)
-                        goodPoints +=100;
+                        goodPoints +=500;
 
                     int to_upper_right = grid.adjecentToUpRight(i,j);
                     int to_lower_left =  grid.adjecentToDownLeft(i,j);
                     if(to_upper_right == 2 && j<4 && i<4 && grid.getStack(i+3).size() >=j+3 && grid.getDisc(i+3,j+3) == Disc.WHITE)
-                        goodPoints +=100;
+                        goodPoints +=500;
                     if(to_lower_left == 2 && j<5 && i<6 && grid.getStack(i+1).size()>=j+1 && grid.getDisc(i+1,j+1) == Disc.WHITE )
-                        goodPoints +=100;
+                        goodPoints +=500;
 
                     int growing = to_lower_left + to_upper_right;
 
@@ -187,9 +187,9 @@ public class State {
                     int to_upper_left = grid.adjecentToUpLeft(i,j);
 
                     if(to_lower_right == 2 && i>0 && j<5 && grid.getStack(i-1).size()>=j+1 && grid.getDisc(i-1,j+1) == Disc.WHITE)
-                        goodPoints += 100;
+                        goodPoints += 500;
                     if(to_upper_left == 2 && i<6 && j>0 && grid.getStack(i+1).size()>=j-1 && grid.getDisc(i+1,j-1) == Disc.WHITE)
-                        goodPoints += 100;
+                        goodPoints += 500;
                     int reducing =  to_lower_left + to_upper_left;
                     int biggest = Math.max(Math.max(vertical,horizontal),Math.max(growing,reducing));
                     badPoints += biggest;
@@ -218,23 +218,6 @@ public class State {
         if(turn)
             numturn = 2;
         else numturn = 1;
-        int randOrd = 0;
-
-        if(!grid.getStack(0).isEmpty())
-            randOrd *= grid.getStack(0).peek().ordinal()*grid.getStack(0).size();
-        if(!grid.getStack(1).isEmpty())
-            randOrd *= 1+grid.getStack(1).peek().ordinal()*grid.getStack(1).size();
-        if(!grid.getStack(2).isEmpty())
-            randOrd *= 2+grid.getStack(2).peek().ordinal()*grid.getStack(2).size();
-        if(!grid.getStack(3).isEmpty())
-            randOrd += 3+grid.getStack(3).peek().ordinal()*grid.getStack(3).size();
-        if(!grid.getStack(4).isEmpty())
-            randOrd *= 4+grid.getStack(4).peek().ordinal()*grid.getStack(4).size();
-        if(!grid.getStack(5).isEmpty())
-            randOrd += 5+grid.getStack(5).peek().ordinal()*grid.getStack(5).size();
-        if(!grid.getStack(6).isEmpty())
-            randOrd *= 6+grid.getStack(6).peek().ordinal()*grid.getStack(6).size();
-        //System.out.println(currentColumn*numturn+randOrd);
-        return currentColumn+numturn+randOrd+grid.getClass().hashCode()+grid.getStack(5).hashCode()+grid.getStack(6).hashCode()+grid.getStack(1).hashCode()+grid.getStack(2).hashCode()+grid.getStack(3).hashCode();
+        return numturn*grid.hashCode();
     }
 }
