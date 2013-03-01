@@ -43,10 +43,10 @@ public class Grid {
 
     public Disc getDisc(int column,int row)
     {
-        if(column > getWidth() )
-            throw new IndexOutOfBoundsException();
+        if(column >= getWidth() || column<0)
+            return null;
         Stack<Disc> current = columns.get(column);
-        if(row >= current.size())
+        if(row >= current.size() || row<0)
             return null;
         return current.elementAt(row);
     }
@@ -72,68 +72,6 @@ public class Grid {
             }
             System.out.println();
         }
-    }
-    static int alphabeta(State node, int depth, int alpha, int beta, boolean maxplayer)  {
-        if( depth == 0 || node.gameFinished() == 1 )
-            return node.heuristic_value();
-        List<State> children = new ArrayList<State>();
-        for(Integer n : node.legalColumns())
-            children.add( node.successor(n));
-        if(maxplayer)
-        {
-            for(State child : children)
-            {
-                alpha = Math.max(alpha, alphabeta(child, depth-1, alpha, beta, !maxplayer ));
-                if(beta <= alpha)
-                    break; /* Beta cut-off */
-            }
-            return alpha;
-        }
-        else
-        {
-            for(State child : children)
-            {
-                beta = Math.min(beta, alphabeta(child, depth-1, alpha, beta, !maxplayer ));
-                if(beta <= alpha)
-                    break; /* Alpha cut-off */
-            }
-            return beta;
-        }
-    }
-    public static void main(String[] args)
-    {
-        boolean myTurn = true;
-        State state = new State(true,new Grid(7,6));
-        state.successor(4).debug();
-        return;
-       /*
-        int count = 0;
-        while(state.legalColumns().size() != 0)
-        {
-            Random rand = new Random();
-            int col = rand.nextInt(state.legalColumns().size());
-            myTurn =   count % 2 != 0;
-            if(myTurn)
-                state.putDisc(state.legalColumns().get(rand.nextInt(state.legalColumns().size())));
-            else {
-            int best = -999999;
-            int bestMove = -1;
-            for(int i=0;i<state.legalColumns().size();i++)
-            {
-                int score = alphabeta(state.successor(state.legalColumns().get(i)), 6, Integer.MIN_VALUE, Integer.MAX_VALUE, myTurn);
-                if(score > best)
-                {
-                    best = score;
-                    bestMove = i;
-                }
-            }
-            state.putDisc(state.legalColumns().get(state.legalColumns().get(bestMove)));
-            }
-            count++;
-        }
-        state.debug();
-        System.out.println("Points:" + state.heuristic_value());
-                          */
     }
 
     public int adjecentToLeft(int x, int y)
