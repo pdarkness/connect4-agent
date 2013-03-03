@@ -105,7 +105,7 @@ public class JamesBondAgent implements Agent {
         //2. run alpha-beta search to determine the best move
         if (myTurn) {
             counter = 0;
-            endTime = System.currentTimeMillis()+playclock*1000 - 600;
+            endTime = System.currentTimeMillis()+playclock*1000 - (playclock*1000)/10;
             List<State> children = new ArrayList<State>();
             int bestColumn = -1;
             int depth = 0;
@@ -129,8 +129,10 @@ public class JamesBondAgent implements Agent {
                 }
                 catch(TimeLimitExceededException e)
                 {
+                    double per_second = state_expansions / playclock;
                     System.out.println("DEPTH REACHED:" + depth);
                     System.out.println("Expansions:" + state_expansions);
+                    System.out.println("Expansions per second:" + per_second);
                     return "(DROP " + bestColumn + ")";
                 }
             }
