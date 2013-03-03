@@ -97,6 +97,7 @@ public class JamesBondAgent implements Agent {
 
     @Override
     public String nextAction(int lastDrop) {
+        state_expansions = 0;
         // update your internal world model according to the action that was just executed
         if(lastDrop != 0)
             state.putDisc(lastDrop);
@@ -137,7 +138,6 @@ public class JamesBondAgent implements Agent {
                 }
             }
         } else {
-            System.out.println("EXPANSIONS:" + counter);
             return "NOOP";
         }
     }
