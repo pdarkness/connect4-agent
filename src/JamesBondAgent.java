@@ -14,6 +14,7 @@ public class JamesBondAgent implements Agent {
     private HashMap<State,Entry> checkedStates;
     private long endTime;
     private int counter = 0;
+    private int state_expansions;
     private Disc me;
 
     private class Entry {
@@ -36,9 +37,9 @@ public class JamesBondAgent implements Agent {
         if(lookup != null)
             if(     lookup.depth >= depth &&
                     lookup.type == EXACT ||
-                   (lookup.type == ALPHA && lookup.value == alpha) ||
-                   (lookup.type == BETA && lookup.value == beta)
-              )
+                    (lookup.type == ALPHA && lookup.value == alpha) ||
+                    (lookup.type == BETA && lookup.value == beta)
+                    )
             {
                 return lookup.value;
             }
@@ -49,6 +50,7 @@ public class JamesBondAgent implements Agent {
             checkedStates.put(node,new Entry(s,depth,EXACT));
             return s;
         }
+        state_expansions++;
         List<State> children = new ArrayList<State>();
         for(Integer n : node.legalColumns())
             children.add( node.successor(n));
@@ -81,12 +83,13 @@ public class JamesBondAgent implements Agent {
 
     @Override
     public void init(String role, int playclock) {
+        state_expansions = 0;
         checkedStates = new HashMap<State, Entry>();
         this.role = role;
         this.playclock = playclock;
         myTurn = !role.equals("WHITE");
         if(!myTurn)
-               me = Disc.WHITE;
+            me = Disc.WHITE;
         else   me = Disc.RED;
         this.state = new State(true,new Grid(7,6));
         // TODO: add your own initialization code here
@@ -102,7 +105,7 @@ public class JamesBondAgent implements Agent {
         //2. run alpha-beta search to determine the best move
         if (myTurn) {
             counter = 0;
-            endTime = System.currentTimeMillis()+playclock*1000 - 200;
+            endTime = System.currentTimeMillis()+playclock*1000 - 600;
             List<State> children = new ArrayList<State>();
             int bestColumn = -1;
             int depth = 0;
@@ -115,11 +118,11 @@ public class JamesBondAgent implements Agent {
                     for(Integer n : state.legalColumns())
                     {
                         int score = alphabeta(state.successor(n), i, Integer.MIN_VALUE, Integer.MAX_VALUE, myTurn);
-                            if(score > currentBestScore)
-                            {
-                                currentBestScore = score;
-                                currentBestColumn = n;
-                            }
+                        if(score > currentBestScore)
+                        {
+                            currentBestScore = score;
+                            currentBestColumn = n;
+                        }
                     }
                     depth = i;
                     bestColumn = currentBestColumn;
@@ -127,6 +130,7 @@ public class JamesBondAgent implements Agent {
                 catch(TimeLimitExceededException e)
                 {
                     System.out.println("DEPTH REACHED:" + depth);
+                    System.out.println("Expansions:" + state_expansions);
                     return "(DROP " + bestColumn + ")";
                 }
             }
