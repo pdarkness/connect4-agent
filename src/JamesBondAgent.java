@@ -95,6 +95,9 @@ public class JamesBondAgent implements Agent {
         // TODO: add your own initialization code here
     }
 
+    int turns = 0;
+    List<Integer> exp = new ArrayList<Integer>();
+
     @Override
     public String nextAction(int lastDrop) {
         state_expansions = 0;
@@ -105,6 +108,7 @@ public class JamesBondAgent implements Agent {
 
         //2. run alpha-beta search to determine the best move
         if (myTurn) {
+            turns++;
             counter = 0;
             endTime = System.currentTimeMillis()+playclock*1000 - (playclock*1000)/10;
             List<State> children = new ArrayList<State>();
@@ -133,7 +137,13 @@ public class JamesBondAgent implements Agent {
                     double per_second = state_expansions / playclock;
                     System.out.println("DEPTH REACHED:" + depth);
                     System.out.println("Expansions:" + state_expansions);
+                    exp.add(state_expansions);
                     System.out.println("Expansions per second:" + per_second);
+                    int total = 0;
+                    for(int t=0;t<exp.size();t++)
+                        total += exp.get(t);
+                    System.out.println("Average expansions:" + total/exp.size());
+
                     return "(DROP " + bestColumn + ")";
                 }
             }
